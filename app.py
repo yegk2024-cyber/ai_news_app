@@ -1,4 +1,4 @@
-.import streamlit as st
+import streamlit as st
 import asyncio
 import edge_tts
 import os
@@ -29,20 +29,18 @@ if st.button("🚀 สร้างไฟล์เสียงพากย์ (MP
         with st.spinner("กำลังประมวลผลเสียงพากย์..."):
             output_file = "news_voice.mp3"
             
-            # ลบไฟล์เก่าทิ้งก่อนกันค้าง
-            if os.path.exists(output_file):
-                os.remove(output_file)
-            
-            async def generate_audio(v_id):
-                communicate = edge_tts.Communicate(news_text, v_id)
+            async def generate_audio():
+                communicate = edge_tts.Communicate(news_text, voice_id)
                 await communicate.save(output_file)
 
             try:
-                # ลองเจนด้วยเสียงที่เลือก
-                asyncio.run(generate_audio(voice_id))
+                asyncio.run(generate_audio())
                 st.success("สร้างไฟล์เสียงสำเร็จแล้ว!")
+                
+                # เล่นเสียง
                 st.audio(output_file, format="audio/mp3")
                 
+                # ปุ่มดาวน์โหลด
                 with open(output_file, "rb") as f:
                     st.download_button(
                         label="📥 ดาวน์โหลดไฟล์เสียง (.mp3) ลงเครื่อง",
@@ -51,5 +49,4 @@ if st.button("🚀 สร้างไฟล์เสียงพากย์ (MP
                         mime="audio/mp3"
                     )
             except Exception as e:
-                st.error(f"เกิดข้อผิดพลาดกับเสียงนี้: {e}")
-                st.info("💡 คำแนะนำ: ลองสลับไปเลือกเสียงภาษาลาว (Chanthavong) หรือภาษาไทยเพื่อทดสอบการอ่านบทข่าวดูได้ครับ")
+                st.error(f"เกิดข้อผิดพลาด: {e}")
