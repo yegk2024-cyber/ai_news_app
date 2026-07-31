@@ -1,3 +1,4 @@
+
 import streamlit as st
 import asyncio
 import edge_tts
@@ -8,11 +9,12 @@ st.set_page_config(page_title="AI News Anchor Studio", page_icon="🎙️", layo
 st.title("🎙️ ระบบสร้างเสียงพากย์และกรอบข่าว AI")
 st.caption("รองรับภาษา Hmong (ม้ง) | ภาษาลาว (Lao) | ภาษาไทย (Thai)")
 
-# ตัวเลือกเสียงพากย์
+# ตัวเลือกเสียงพากย์ (เพิ่มเสียงผู้ชายภาษาม้งให้แล้วครับ)
 VOICE_OPTIONS = {
+    "ภาษา Hmong (ม้ง) - เสียงผู้ชาย (Yunfan)": "hmn-CN-YunfanNeural",
     "ภาษา Hmong (ม้ง) - เสียงผู้หญิง (Wanida)": "hmn-CN-WanidaNeural",
-    "ภาษาลาว (Lao) - เสียงผู้หญิง (Chanthavong)": "lo-LA-ChanthavongNeural",
     "ภาษาลาว (Lao) - เสียงผู้ชาย (Keomany)": "lo-LA-KeomanyNeural",
+    "ภาษาลาว (Lao) - เสียงผู้หญิง (Chanthavong)": "lo-LA-ChanthavongNeural",
     "ภาษาไทย - เสียงผู้ชาย (Niwat)": "th-TH-NiwatNeural",
     "ภาษาไทย - เสียงผู้หญิง (Premwatee)": "th-TH-PremwateeNeural"
 }
