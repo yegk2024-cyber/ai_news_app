@@ -1,5 +1,4 @@
-
-import streamlit as st
+.import streamlit as st
 import asyncio
 import edge_tts
 import os
@@ -9,12 +8,11 @@ st.set_page_config(page_title="AI News Anchor Studio", page_icon="🎙️", layo
 st.title("🎙️ ระบบสร้างเสียงพากย์และกรอบข่าว AI")
 st.caption("รองรับภาษา Hmong (ม้ง) | ภาษาลาว (Lao) | ภาษาไทย (Thai)")
 
-# ตัวเลือกเสียงพากย์ (เพิ่มเสียงผู้ชายภาษาม้งให้แล้วครับ)
+# ตัวเลือกเสียงพากย์
 VOICE_OPTIONS = {
-    "ภาษา Hmong (ม้ง) - เสียงผู้ชาย (Yunfan)": "hmn-CN-YunfanNeural",
     "ภาษา Hmong (ม้ง) - เสียงผู้หญิง (Wanida)": "hmn-CN-WanidaNeural",
-    "ภาษาลาว (Lao) - เสียงผู้ชาย (Keomany)": "lo-LA-KeomanyNeural",
     "ภาษาลาว (Lao) - เสียงผู้หญิง (Chanthavong)": "lo-LA-ChanthavongNeural",
+    "ภาษาลาว (Lao) - เสียงผู้ชาย (Keomany)": "lo-LA-KeomanyNeural",
     "ภาษาไทย - เสียงผู้ชาย (Niwat)": "th-TH-NiwatNeural",
     "ภาษาไทย - เสียงผู้หญิง (Premwatee)": "th-TH-PremwateeNeural"
 }
@@ -31,18 +29,20 @@ if st.button("🚀 สร้างไฟล์เสียงพากย์ (MP
         with st.spinner("กำลังประมวลผลเสียงพากย์..."):
             output_file = "news_voice.mp3"
             
-            async def generate_audio():
-                communicate = edge_tts.Communicate(news_text, voice_id)
+            # ลบไฟล์เก่าทิ้งก่อนกันค้าง
+            if os.path.exists(output_file):
+                os.remove(output_file)
+            
+            async def generate_audio(v_id):
+                communicate = edge_tts.Communicate(news_text, v_id)
                 await communicate.save(output_file)
 
             try:
-                asyncio.run(generate_audio())
+                # ลองเจนด้วยเสียงที่เลือก
+                asyncio.run(generate_audio(voice_id))
                 st.success("สร้างไฟล์เสียงสำเร็จแล้ว!")
-                
-                # เล่นเสียง
                 st.audio(output_file, format="audio/mp3")
                 
-                # ปุ่มดาวน์โหลด
                 with open(output_file, "rb") as f:
                     st.download_button(
                         label="📥 ดาวน์โหลดไฟล์เสียง (.mp3) ลงเครื่อง",
@@ -51,4 +51,5 @@ if st.button("🚀 สร้างไฟล์เสียงพากย์ (MP
                         mime="audio/mp3"
                     )
             except Exception as e:
-                st.error(f"เกิดข้อผิดพลาด: {e}")
+                st.error(f"เกิดข้อผิดพลาดกับเสียงนี้: {e}")
+                st.info("💡 คำแนะนำ: ลองสลับไปเลือกเสียงภาษาลาว (Chanthavong) หรือภาษาไทยเพื่อทดสอบการอ่านบทข่าวดูได้ครับ")
